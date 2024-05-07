@@ -35,5 +35,3 @@ jobs:
       - name: run Light test
         run: pio test -e win_test_light -f "test_win_light"  
 
-  
-
