@@ -17,3 +17,9 @@ void debug_print_w_prefix(const char *message, const char *prefix)
     sprintf(debug_message, "%s: %s", prefix, message);
     debug_print(debug_message);
 }
+
+void debug_print_w_uint_16(const char *message, const uint16_t *integer) {
+    char debug_message[100];
+    sprintf(debug_message, "%s: %hu", message, *integer);
+    debug_print(debug_message);
+}
