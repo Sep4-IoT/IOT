@@ -5,8 +5,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include "decoder.h"
-#include "settings.c"
 #include <stdio.h>
+#include "light_sensor_controller.h"
+#include "wifi_controller.h"
 
 
 extern bool decoder_debugMode;
@@ -87,6 +88,13 @@ void decoder_decode(const char *message) {
         int humidity = temp_hum[2] * 10 + temp_hum[3]; //Constructing humidity from response array
         decoder_send(message, RES_GID_SEN_VAL, 4, humidity);
     }
+    //A request for light sensor reading
+    if (t0_is_req == 0 && t2_is_get == 0 && t3_is_lig == 0) //In: REQ,gid,GET,LIG,val
+    {
+        uint16_t reading = light_sensor_controller_makeReading();
+        decoder_send(message, RES_GID_SEN_VAL, 1, (int)reading);
+    }
+
     // Echo for connectivity response
     else if (t0_is_req == 0 && t2_is_echo == 0) //In: REQ,gid,ECHO
     {
@@ -104,19 +112,19 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "ACK,%s,SER,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,SER,%d", greenhouseId, value);
                 break;
             case 1:
-                sprintf(answer, "ACK,%s,LIG,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,LIG,%d", greenhouseId, value);
                 break;
             case 2:
-                sprintf(answer, "ACK,%s,HUM,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,HUM,%d", greenhouseId, value);
                 break;
             case 3:
-                sprintf(answer, "ACK,%s,CO2,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,CO2,%d", greenhouseId, value);
                 break;
             case 4:
-                sprintf(answer, "ACK,%s,TEM,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,TEM,%d", greenhouseId, value);
                 break;
         }
     }
@@ -129,19 +137,19 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "RES,%s,SER,%u", greenhouseId, value); 
+                sprintf(answer, "RES,%s,SER,%d", greenhouseId, value); 
                 break;
             case 1:
-                sprintf(answer, "RES,%s,LIG,%u", greenhouseId, value); 
+                sprintf(answer, "RES,%s,LIG,%d", greenhouseId, value); 
                 break;
             case 2:
-                sprintf(answer, "RES,%s,HUM,%u", greenhouseId, value); 
+                sprintf(answer, "RES,%s,HUM,%d", greenhouseId, value); 
                 break;
             case 3:
-                sprintf(answer, "RES,%s,CO2,%u", greenhouseId, value);     
+                sprintf(answer, "RES,%s,CO2,%d", greenhouseId, value);     
                 break;
             case 4:
-                sprintf(answer, "RES,%s,TEM,%u", greenhouseId, value);  
+                sprintf(answer, "RES,%s,TEM,%d", greenhouseId, value);  
                 break;
         }
     }
@@ -150,25 +158,29 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "UPD,%s,POST,SER,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,SER,%d", greenhouseId, value); 
                 break;
             case 1:
-                sprintf(answer, "UPD,%s,POST,LIG,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,LIG,%d", greenhouseId, value); 
                 break;
             case 2:
-                sprintf(answer, "UPD,%s,POST,HUM,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,HUM,%d", greenhouseId, value); 
                 break;
             case 3:
-                sprintf(answer, "UPD,%s,POST,CO2,%u", greenhouseId, value);   
+                sprintf(answer, "UPD,%s,POST,CO2,%d", greenhouseId, value);   
                 break;
             case 4:
-                sprintf(answer, "UPD,%s,POST,TEM,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,TEM,%d", greenhouseId, value); 
                 break;
         }
     }
     else if (pattern == WAR_GID_VAL)
     {
         sprintf(answer, "ACK,%s", greenhouseId);
+    }
+
+    if(decoder_debugMode == true){
+        debug_print_w_uint_16("Decoder asking wifi to send a message back:",value);
     }
 
     wifi_controller_send_message(answer);

@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "wifi_controller.h"
 #include "debug.h"
+#include "light_sensor_controller.h"
 
 
 
@@ -29,6 +30,8 @@ void setup(){
   //wifi_controller_set_server_port(23);
   wifi_controller_connect_to_ap();
   wifi_controller_connect_to_tcp();
+
+  light_sensor_controller_init();
 
   display_init();
   buttons_init();
