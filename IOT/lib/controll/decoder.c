@@ -1,5 +1,6 @@
 #include "debug.h"
 #include "window.h"
+#include "dht11_controller.h"
 #include <stddef.h> 
 #include <string.h>
 #include <stdbool.h>
@@ -63,6 +64,28 @@ void decoder_decode(const char *message) {
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_ser == 0) //In: REQ,gid,GET,SER
     {
         decoder_send(message, RES_GID_SEN_VAL, 0, window_get_state());
+    }
+    else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_tem == 0)
+    {
+        uint8_t temp_hum[4];
+        uint8_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
+        for (int i = 0; i < 4; ++i) 
+        {
+            temp_hum[i] = temp_hum_ptr[i];
+        }
+        int temperature = temp_hum[0] * 10 + temp_hum[1]; //Constructing temperature from response array
+        decoder_send(message, RES_GID_SEN_VAL, 4, temperature);
+    }
+    else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_hum == 0)
+    {
+        uint8_t temp_hum[4];
+        uint8_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
+        for (int i = 0; i < 4; ++i) 
+        {
+            temp_hum[i] = temp_hum_ptr[i];
+        }
+        int humidity = temp_hum[2] * 10 + temp_hum[3]; //Constructing humidity from response array
+        decoder_send(message, RES_GID_SEN_VAL, 4, humidity);
     }
     // Echo for connectivity response
     else if (t0_is_req == 0 && t2_is_echo == 0) //In: REQ,gid,ECHO
