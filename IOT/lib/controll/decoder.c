@@ -91,6 +91,8 @@ void decoder_decode(const char *message) {
     //A request for light sensor reading
     if (t0_is_req == 0 && t2_is_get == 0 && t3_is_lig == 0) //In: REQ,gid,GET,LIG,val
     {
+
+
         uint16_t reading = light_sensor_controller_makeReading();
         decoder_send(message, RES_GID_SEN_VAL, 1, (int)reading);
     }
@@ -179,10 +181,7 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         sprintf(answer, "ACK,%s", greenhouseId);
     }
 
-    if(decoder_debugMode == true){
-        debug_print_w_uint_16("Decoder asking wifi to send a message back:",value);
-    }
-
+    
     wifi_controller_send_message(answer);
 
     if (decoder_debugMode == true)
