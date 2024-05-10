@@ -150,7 +150,7 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "RES,%s,SER,%d", greenhouseId, value); 
+                sprintf(answer, "RES,%s,SER,%d", greenhouseId, *value); 
                 break;
             case 1:
                 sprintf(answer, "RES,%s,LIG,%d", greenhouseId, *value); 
