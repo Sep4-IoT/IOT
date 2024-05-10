@@ -3,6 +3,7 @@
 #include "debug.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "decoder.h"
 
 // wifi controloler rename
@@ -107,7 +108,9 @@ void wifi_controller_disconnect_from_tcp(){
 
 // sending messages
 void wifi_controller_send_message(const char *message){
-    char paddedMessage[50]; // Assuming the maximum length of the message is 50 characters
+     char paddedMessage[50]; // Assuming the maximum length of the message is 50 characters
+    
+
 
     // Copy the message to paddedMessage and pad with null characters if necessary
     size_t messageLength = strlen(message);
@@ -119,6 +122,8 @@ void wifi_controller_send_message(const char *message){
     }
 
     // Transmit the padded message
+    
+
     wifi_command_TCP_transmit((uint8_t *)paddedMessage, 50);
 
     if (wifi_controller_debugMode) {

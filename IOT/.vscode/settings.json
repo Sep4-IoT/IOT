@@ -12,6 +12,8 @@
         "light_sensor_controller.h": "c",
         "window.h": "c",
         "servo.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "light.h": "c",
+        "includes.h": "c"
     }
 }
