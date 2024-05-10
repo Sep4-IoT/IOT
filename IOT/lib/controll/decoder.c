@@ -65,7 +65,7 @@ void decoder_decode(const char *message) {
 
         window_open_at_angle(angle);
         int state = window_get_state();
-        decoder_send(message, ACK_GID_SEN_VAL, 0, &state);
+        decoder_send(message, RES_GID_SEN_VAL, 0,  &state);
     }
     // Request for sensor data
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_ser == 0) //In: REQ,gid,GET,SER
@@ -104,8 +104,8 @@ void decoder_decode(const char *message) {
             //debug_print_w_int("Reading has been converted to int",reading);
         }
         
-        
-        decoder_send(message, RES_GID_SEN_VAL, 1, &reading);
+        decoder_send(message, RES_GID_SEN_VAL, 1, (const int *)reading);
+        //decoder_send(message, RES_GID_SEN_VAL, 1, &reading);
     }
 
     // Echo for connectivity response
