@@ -14,6 +14,7 @@
         "servo.h": "c",
         "stdint.h": "c",
         "light.h": "c",
-        "includes.h": "c"
+        "includes.h": "c",
+        "dht11_controller.h": "c"
     }
 }

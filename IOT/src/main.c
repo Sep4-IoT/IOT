@@ -9,6 +9,7 @@
 #include "wifi_controller.h"
 #include "debug.h"
 #include "light_sensor_controller.h"
+#include "dht11_controller.h"
 
 
 
@@ -32,6 +33,7 @@ void setup(){
   wifi_controller_connect_to_tcp();
 
   light_sensor_controller_init();
+  dht11_controller_init();
 
   display_init();
   buttons_init();
