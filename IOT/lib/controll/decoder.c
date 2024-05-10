@@ -2,6 +2,7 @@
 #include "window.h"
 #include "dht11_controller.h"
 #include <stddef.h> 
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "decoder.h"
@@ -74,7 +75,7 @@ void decoder_decode(const char *message) {
         {
             temp_hum[i] = temp_hum_ptr[i];
         }
-        int temperature = (int)temp_hum[0] * 10 + (int)temp_hum[1]; //Constructing temperature from response array
+        int temperature = temp_hum[0] * 10 + temp_hum[1]; //Constructing temperature from response array
         decoder_send(message, RES_GID_SEN_VAL, 4, temperature);
     }
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_hum == 0)
@@ -85,14 +86,12 @@ void decoder_decode(const char *message) {
         {
             temp_hum[i] = temp_hum_ptr[i];
         }
-        int humidity = (int)temp_hum[2] * 10 + (int)temp_hum[3]; //Constructing humidity from response array
-        decoder_send(message, RES_GID_SEN_VAL, 4, humidity);
+        int humidity = temp_hum[2] * 10 + temp_hum[3]; //Constructing humidity from response array
+        decoder_send(message, RES_GID_SEN_VAL, 2, humidity);
     }
     //A request for light sensor reading
     if (t0_is_req == 0 && t2_is_get == 0 && t3_is_lig == 0) //In: REQ,gid,GET,LIG,val
     {
-
-
         uint16_t reading = light_sensor_controller_makeReading();
         decoder_send(message, RES_GID_SEN_VAL, 1, (int)reading);
     }
