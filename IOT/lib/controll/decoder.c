@@ -64,12 +64,14 @@ void decoder_decode(const char *message) {
         }
 
         window_open_at_angle(angle);
-        decoder_send(message, ACK_GID_SEN_VAL, 0, window_get_state());
+        int state = window_get_state();
+        decoder_send(message, ACK_GID_SEN_VAL, 0, &state);
     }
     // Request for sensor data
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_ser == 0) //In: REQ,gid,GET,SER
     {
-        decoder_send(message, RES_GID_SEN_VAL, 0, window_get_state());
+        int state = window_get_state();
+        decoder_send(message, RES_GID_SEN_VAL, 0, &state);
     }
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_tem == 0)
     {
@@ -80,7 +82,7 @@ void decoder_decode(const char *message) {
             temp_hum[i] = temp_hum_ptr[i];
         }
         int temperature = temp_hum[0] * 10 + temp_hum[1]; //Constructing temperature from response array
-        decoder_send(message, RES_GID_SEN_VAL, 4, temperature);
+        decoder_send(message, RES_GID_SEN_VAL, 4, &temperature);
     }
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_hum == 0)
     {
@@ -91,7 +93,7 @@ void decoder_decode(const char *message) {
             temp_hum[i] = temp_hum_ptr[i];
         }
         int humidity = temp_hum[2] * 10 + temp_hum[3]; //Constructing humidity from response array
-        decoder_send(message, RES_GID_SEN_VAL, 2, humidity);
+        decoder_send(message, RES_GID_SEN_VAL, 2, &humidity);
     }
     //A request for light sensor reading
     if (t0_is_req == 0 && t2_is_get == 0 && t3_is_lig == 0) //In: REQ,gid,GET,LIG,value
@@ -103,7 +105,7 @@ void decoder_decode(const char *message) {
         }
         
         
-        decoder_send(message, RES_GID_SEN_VAL, 1, reading);
+        decoder_send(message, RES_GID_SEN_VAL, 1, &reading);
     }
 
     // Echo for connectivity response
@@ -148,7 +150,7 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "RES,%s,SER,%d", greenhouseId, *value); 
+                sprintf(answer, "RES,%s,SER,%d", greenhouseId, value); 
                 break;
             case 1:
                 sprintf(answer, "RES,%s,LIG,%d", greenhouseId, *value); 
