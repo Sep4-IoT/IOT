@@ -1,11 +1,14 @@
 #include "debug.h"
 #include "window.h"
+#include "dht11_controller.h"
 #include <stddef.h> 
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "decoder.h"
-#include "settings.c"
 #include <stdio.h>
+#include "light_sensor_controller.h"
+#include "wifi_controller.h"
 
 
 extern bool decoder_debugMode;
@@ -28,7 +31,7 @@ void decoder_decode(const char *message) {
     char *token = strtok(message, delimiter);
     while (token != NULL && num_tokens < 5)
     {
-        strncpy(tokens[num_tokens], token, 9);
+        strncpy(tokens[num_tokens], token, 10);
         tokens[num_tokens][9] = '\0';
         num_tokens++;
         token = strtok(NULL, delimiter);
@@ -56,14 +59,55 @@ void decoder_decode(const char *message) {
     if (t0_is_req == 0 && t2_is_set == 0 && t3_is_ser == 0) //In: REQ,gid,SET,SER,val
     {
         int angle = atoi(tokens[4]); //Converting angle which is the 5th parameter of REQ,gid,SET,SER,val
+        if(decoder_debugMode){
+            debug_print_w_int("atoi angle is", &angle);
+        }
+
         window_open_at_angle(angle);
-        decoder_send(message, ACK_GID_SEN_VAL, 0, window_get_state());
+        int state = window_get_state();
+        decoder_send(message, RES_GID_SEN_VAL, 0,  &state);
     }
     // Request for sensor data
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_ser == 0) //In: REQ,gid,GET,SER
     {
-        decoder_send(message, RES_GID_SEN_VAL, 0, window_get_state());
+        int state = window_get_state();
+        decoder_send(message, RES_GID_SEN_VAL, 0, &state);
     }
+    else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_tem == 0)
+    {
+        uint8_t temp_hum[4];
+        uint8_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
+        for (int i = 0; i < 4; ++i) 
+        {
+            temp_hum[i] = temp_hum_ptr[i];
+        }
+        int temperature = temp_hum[2];// * 10 + temp_hum[3]; //Constructing temperature from response array
+        decoder_send(message, RES_GID_SEN_VAL, 4,(const int *) &temperature);
+    }
+    else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_hum == 0)
+    {
+        uint8_t temp_hum[4];
+        uint8_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
+        for (int i = 0; i < 4; ++i) 
+        {
+            temp_hum[i] = temp_hum_ptr[i];
+        }
+        int humidity = temp_hum[0];// * 10 + temp_hum[1]; //Constructing humidity from response array
+        decoder_send(message, RES_GID_SEN_VAL, 2, &humidity);
+    }
+    //A request for light sensor reading
+    if (t0_is_req == 0 && t2_is_get == 0 && t3_is_lig == 0) //In: REQ,gid,GET,LIG,value
+    {
+        uint16_t reading = light_sensor_controller_makeReading();
+
+        if(decoder_debugMode){
+            //debug_print_w_int("Reading has been converted to int",reading);
+        }
+        
+        decoder_send(message, RES_GID_SEN_VAL, 1, (const int *)reading);
+        //decoder_send(message, RES_GID_SEN_VAL, 1, &reading);
+    }
+
     // Echo for connectivity response
     else if (t0_is_req == 0 && t2_is_echo == 0) //In: REQ,gid,ECHO
     {
@@ -73,27 +117,27 @@ void decoder_decode(const char *message) {
 
 // SENSOR LEGEND: SER=0, LIG=1, HUM=2, CO2=3, TEM=4
 // DEBUG LEGEND: FALSE=0, TRUE=1
-void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, int value)
+void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value)
 {
-    char answer[50];
+    const char answer[50];
     if (pattern == ACK_GID_SEN_VAL)
     {
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "ACK,%s,SER,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,SER,%d", greenhouseId, *value);
                 break;
             case 1:
-                sprintf(answer, "ACK,%s,LIG,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,LIG,%d", greenhouseId, *value);
                 break;
             case 2:
-                sprintf(answer, "ACK,%s,HUM,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,HUM,%d", greenhouseId, *value);
                 break;
             case 3:
-                sprintf(answer, "ACK,%s,CO2,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,CO2,%d", greenhouseId, *value);
                 break;
             case 4:
-                sprintf(answer, "ACK,%s,TEM,%u", greenhouseId, value);
+                sprintf(answer, "ACK,%s,TEM,%d", greenhouseId, *value);
                 break;
         }
     }
@@ -106,19 +150,19 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "RES,%s,SER,%u", greenhouseId, value); 
+                sprintf(answer, "RES,%s,SER,%d", greenhouseId, *value); 
                 break;
             case 1:
-                sprintf(answer, "RES,%s,LIG,%u", greenhouseId, value); 
+                sprintf(answer, "RES,%s,LIG,%d", greenhouseId, *value); 
                 break;
             case 2:
-                sprintf(answer, "RES,%s,HUM,%u", greenhouseId, value); 
+                sprintf(answer, "RES,%s,HUM,%d", greenhouseId, *value); 
                 break;
             case 3:
-                sprintf(answer, "RES,%s,CO2,%u", greenhouseId, value);     
+                sprintf(answer, "RES,%s,CO2,%d", greenhouseId, *value);     
                 break;
             case 4:
-                sprintf(answer, "RES,%s,TEM,%u", greenhouseId, value);  
+                sprintf(answer, "RES,%s,TEM,%d", greenhouseId, *value);  
                 break;
         }
     }
@@ -127,19 +171,19 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "UPD,%s,POST,SER,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,SER,%d", greenhouseId, *value); 
                 break;
             case 1:
-                sprintf(answer, "UPD,%s,POST,LIG,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,LIG,%d", greenhouseId, *value); 
                 break;
             case 2:
-                sprintf(answer, "UPD,%s,POST,HUM,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,HUM,%d", greenhouseId, *value); 
                 break;
             case 3:
-                sprintf(answer, "UPD,%s,POST,CO2,%u", greenhouseId, value);   
+                sprintf(answer, "UPD,%s,POST,CO2,%d", greenhouseId, *value);   
                 break;
             case 4:
-                sprintf(answer, "UPD,%s,POST,TEM,%u", greenhouseId, value); 
+                sprintf(answer, "UPD,%s,POST,TEM,%d", greenhouseId, *value); 
                 break;
         }
     }
@@ -148,6 +192,7 @@ void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, in
         sprintf(answer, "ACK,%s", greenhouseId);
     }
 
+    
     wifi_controller_send_message(answer);
 
     if (decoder_debugMode == true)

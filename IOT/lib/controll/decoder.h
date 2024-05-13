@@ -2,6 +2,7 @@
 /// to display all the aplication layer calls being made for debugging.
 #include "window.h"
 
+
 enum COMMUNICATION_PATTERN_t {
     ACK_GID_SEN_VAL,
     ACK_GID_ECHO,
@@ -11,4 +12,4 @@ enum COMMUNICATION_PATTERN_t {
 };
 
 void decoder_decode(const char *message);
-void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, int value);
+void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value);

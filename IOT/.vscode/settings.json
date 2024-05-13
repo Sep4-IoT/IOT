@@ -8,6 +8,13 @@
         "wifi.h": "c",
         "wifimodule.h": "c",
         "debug.h": "c",
-        "decoder.h": "c"
+        "decoder.h": "c",
+        "light_sensor_controller.h": "c",
+        "window.h": "c",
+        "servo.h": "c",
+        "stdint.h": "c",
+        "light.h": "c",
+        "includes.h": "c",
+        "dht11_controller.h": "c"
     }
 }
