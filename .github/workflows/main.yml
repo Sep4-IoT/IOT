@@ -27,6 +27,8 @@ jobs:
         run: pip install --upgrade platformio
 
       - name: Build PlatformIO Project
-        run: pwd
-        run: ls -al
-        run: pio run
+        run: | 
+          pwd
+          ls -al
+          pio run
+        
