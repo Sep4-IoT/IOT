@@ -28,6 +28,7 @@ jobs:
 
       - name: Build PlatformIO Project
         run: | 
+          cd IOT
           pwd
           ls -al
           pio run
