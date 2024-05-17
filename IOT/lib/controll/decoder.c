@@ -117,7 +117,7 @@ void decoder_decode(const char *message) {
 
 // SENSOR LEGEND: SER=0, LIG=1, HUM=2, CO2=3, TEM=4
 // DEBUG LEGEND: FALSE=0, TRUE=1
-void decoder_send (const char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value)
+void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value)
 {
     const char answer[50];
     if (pattern == ACK_GID_SEN_VAL)

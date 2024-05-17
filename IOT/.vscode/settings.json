@@ -16,5 +16,8 @@
         "light.h": "c",
         "includes.h": "c",
         "dht11_controller.h": "c"
+        "dht11_controller.h": "c",
+        "wifisceduler.h": "c",
+        "wifi_controller.h": "c"
     }
 }

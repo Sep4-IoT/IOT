@@ -12,5 +12,5 @@ bool light_sensor_controller_debugMode = true;
 char greenhouseId[] = "10"; // greenhouse id
 char *AP_SSID = "augustinas";
 char *AP_PSWD = "asdfghjk";
-char *ServerIP = "192.168.19.40";
+char *ServerIP = "192.168.187.40";
 uint16_t  ServerPort = 23;

@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "light_sensor_controller.h"
 #include "dht11_controller.h"
+#include "sceduled_sender.h"
 
 
 
@@ -53,6 +54,9 @@ int main(){
     _delay_ms(1000);
   while (1)
   {
+
+    _delay_ms(2500);
+    sceduled_sender_TaskSendAllReadings();
     
   }
   
