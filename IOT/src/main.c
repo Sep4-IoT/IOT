@@ -11,6 +11,7 @@
 #include "light_sensor_controller.h"
 #include "dht11_controller.h"
 #include "sceduled_sender.h"
+#include "AppMain.c"
 
 
 
@@ -45,18 +46,18 @@ void setup(){
 
 
 int main(){
-  setup();
+  //setup();
   
-  display_int(1234);
+  //display_int(1234);
 
-  
+  AppMain_main();
 
-    _delay_ms(1000);
+   
   while (1)
   {
 
-    _delay_ms(2500);
-    sceduled_sender_TaskSendAllReadings();
+    //_delay_ms(2500);
+    //sceduled_sender_TaskSendAllReadings();
     
   }
   

@@ -143,3 +143,7 @@ void wifi_controller_callback(){
     decoder_decode(receivedMessage);
     
 }
+
+WIFI_ERROR_MESSAGE_t wifi_controller_commandAT(){
+    return wifi_command_AT();
+}

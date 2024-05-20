@@ -3,6 +3,9 @@
 #include "window.h"
 
 
+#ifndef DECODER_H
+#define DECODER_H
+
 enum COMMUNICATION_PATTERN_t {
     ACK_GID_SEN_VAL,
     ACK_GID_ECHO,
@@ -10,6 +13,9 @@ enum COMMUNICATION_PATTERN_t {
     UPD_GID_POST_SEN_VAL,
     WAR_GID_VAL
 };
+
+#endif // DECODER_H
+
 
 void decoder_decode(const char *message);
 void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value);
