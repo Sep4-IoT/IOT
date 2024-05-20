@@ -29,7 +29,10 @@ jobs:
       - name: Build PlatformIO Project
         run: | 
           cd IOT
-          pwd
-          ls -al
           pio run
-        
+      - name: Archive Build Result
+        uses: actions/upload-artifact@v3
+        with:
+          name: Image_hex
+          path: IOT/.pio/build/megaatmega2560/firmware.hex
+
