@@ -32,10 +32,9 @@ jobs:
           pwd
           ls -al
           pio run
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2
+          
+      - name: Archive Build Result
+        uses: actions/upload-artifact@v3
         with:
-          name: firmware
-          path: |
-            .pio/build/*/*.bin
-            .pio/build/*/*.hex
+          name: ROM Image
+          path: artifact
