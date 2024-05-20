@@ -1,0 +1,40 @@
+name: PlatformIO CI
+
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      -dev-August
+
+jobs:
+  run_tests:
+    name: Run all test to make sure they all pass
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build PlatformIO Project
+        run: | 
+          cd IOT
+          pwd
+          ls -al
+          pio run
+    - name: Archive Build Result
+      uses: actions/upload-artifact@v3
+      with:
+        name: ROM Image
+        path: artifact
+
