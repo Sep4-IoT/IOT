@@ -1,6 +1,7 @@
 #include "light_sensor_controller.h"
 #include "debug.h"
 #include "light.h"
+#include <avr/interrupt.h>
 
 extern bool light_sensor_controller_debugMode;
 
@@ -23,6 +24,7 @@ void light_sensor_controller_init(){
 }
 
 uint16_t light_sensor_controller_makeReading(){
+    
 
     //Debug
     if (light_sensor_controller_debugMode)
@@ -30,13 +32,13 @@ uint16_t light_sensor_controller_makeReading(){
         debug_print_w_prefix("light_sensor_controller_makeReading","called");
     }
     //EndOfDebug
-
+    cli();
     uint16_t reading = light_read();
-
+    sei();
     //Debug
     if (light_sensor_controller_debugMode)
     {
-        debug_print_w_uint_16("light_sensor_controller_makeReading with reading",reading);
+        debug_print_w_uint_16("light_sensor_controller_makeReading with reading",&reading);
     }
     //EndOfDebug
 

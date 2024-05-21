@@ -1,3 +1,4 @@
+#pragma once
 #include "wifi_controller.h"
 //#include "settings.c"
 

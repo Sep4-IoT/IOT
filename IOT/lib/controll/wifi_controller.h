@@ -1,7 +1,7 @@
 /// @brief module is responsible for establishing and keeping connectivity, sending messages
 
 // wifi controloler rename
-
+#pragma once
 #include "wifi.h"
 #include "debug.h"
 

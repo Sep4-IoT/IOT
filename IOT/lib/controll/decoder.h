@@ -1,5 +1,6 @@
 /// @brief This is a module that intitialises com port 0 to communicate with computer
 /// to display all the aplication layer calls being made for debugging.
+#pragma once // makes sure that header fire is incluced only once
 #include "window.h"
 
 
@@ -18,4 +19,4 @@ enum COMMUNICATION_PATTERN_t {
 
 
 void decoder_decode(const char *message);
-void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value);
+void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, uint16_t *value);

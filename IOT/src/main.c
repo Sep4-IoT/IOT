@@ -37,7 +37,7 @@ void setup(){
   light_sensor_controller_init();
   dht11_controller_init();
 
-  display_init();
+  //display_init();
   buttons_init();
   //periodic_task_init_a(set_window,5000);
 }

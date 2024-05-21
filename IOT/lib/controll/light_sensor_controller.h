@@ -1,4 +1,5 @@
 /// @brief module is reponsible for managing the light sensor
+#pragma once
 #include <includes.h>
 
 //Interfaces initialisiation of light sensor

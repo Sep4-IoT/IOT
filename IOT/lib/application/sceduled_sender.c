@@ -1,19 +1,32 @@
 #include "sceduled_sender.h"
 #include "light_sensor_controller.h"
 #include "dht11_controller.h"
+#include <avr/interrupt.h>
 
-
+static uint16_t* dht11_readings[4];
 
 // Task for sending all readings
-void sceduled_sender_TaskSendAllReadings(){
+void sceduled_sender_TaskSendAllReadings(){ //is interup rutine (from periodic function)
 
     sceduled_sender_TaskSendLightReading();
-    delay(100);
-    sceduled_sender_TaskSendHumidityReading();
-    delay(100);
-    sceduled_sender_TaskSendTemperatureReading();
-    delay(100);
+    cli(); // making reading uninteruptable routine
+    sceduled_sender_TaskGetdht11Readings();
+    sei(); // making reading uninteruptable routine
+        // Requires readings to be taken first
+        sceduled_sender_TaskSendHumidityReading();
+        // Requires readings to be taken first
+        sceduled_sender_TaskSendTemperatureReading();
     
+}
+void sceduled_sender_TaskGetdht11Readings(){    // NEEDS FIXING, UNSURE WHY ONLY FIRST VALUE GETS SAVED
+        
+        uint16_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
+        
+        for (int i = 0; i < 4; ++i) 
+        {
+            dht11_readings[i] = temp_hum_ptr[i];
+            debug_print_w_uint_16("readings: ",&dht11_readings[i]);
+        }   
 }
 
 // Tries to send only light reading
@@ -21,8 +34,10 @@ void sceduled_sender_TaskSendLightReading(){
     //void decoder_send (const char* message
     //, enum COMMUNICATION_PATTERN_t pattern, int sensor, 
     // const int *value)
+        
         uint16_t light_value = light_sensor_controller_makeReading();
-        decoder_send("", UPD_GID_POST_SEN_VAL, 1, (const int *)&light_value);
+        decoder_send("", UPD_GID_POST_SEN_VAL, 1, &light_value);
+        
 }
 
 // Tries to send only humidity reading
@@ -30,12 +45,15 @@ void sceduled_sender_TaskSendHumidityReading(){
     //void decoder_send (const char* message
     //, enum COMMUNICATION_PATTERN_t pattern, int sensor, 
     // const int *value)
-        int humidity = dht11_controller_get_temperature_humidity()[1]; 
-        decoder_send("", UPD_GID_POST_SEN_VAL, 2, (const int)&humidity);
+        //int humidity = (dht11_controller_get_temperature_humidity())[1]; 
+        decoder_send("", UPD_GID_POST_SEN_VAL, 2, &dht11_readings[0]);
+        //aaa
 }
 
 // Tries to send only temperature reading
 void sceduled_sender_TaskSendTemperatureReading(){
-        int temperature = dht11_controller_get_temperature_humidity()[3]; 
-        decoder_send("", UPD_GID_POST_SEN_VAL, 4, (const int)&temperature);
+     // to disable interrupt  // the interupts
+        //int temperature = (dht11_controller_get_temperature_humidity())[3]; 
+        decoder_send("", UPD_GID_POST_SEN_VAL, 4, &dht11_readings[2]);
+    
 }

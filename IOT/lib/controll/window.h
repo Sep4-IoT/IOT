@@ -1,6 +1,6 @@
 /// @brief module is reponsible for managing the servo/window
 /// Module also contains the state of the window
-
+#pragma once
 #include <servo.h>
 
 void window_open();    

@@ -1,5 +1,6 @@
 /// @brief This is a module that intitialises com port 0 to communicate with computer
 /// to display all the aplication layer calls being made for debugging.
+#pragma once
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>

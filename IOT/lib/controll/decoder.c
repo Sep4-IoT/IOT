@@ -10,7 +10,6 @@
 #include "light_sensor_controller.h"
 #include "wifi_controller.h"
 
-
 extern bool decoder_debugMode;
 extern char greenhouseId[];
 
@@ -92,7 +91,7 @@ void decoder_decode(const char *message) {
         {
             temp_hum[i] = temp_hum_ptr[i];
         }
-        int humidity = temp_hum[0];// * 10 + temp_hum[1]; //Constructing humidity from response array
+        uint16_t humidity = temp_hum[0];// * 10 + temp_hum[1]; //Constructing humidity from response array
         decoder_send(message, RES_GID_SEN_VAL, 2, &humidity);
     }
     //A request for light sensor reading
@@ -104,7 +103,7 @@ void decoder_decode(const char *message) {
             //debug_print_w_int("Reading has been converted to int",reading);
         }
         
-        decoder_send(message, RES_GID_SEN_VAL, 1, (const int *)reading);
+        decoder_send(message, RES_GID_SEN_VAL, 1, &reading); // changes
         //decoder_send(message, RES_GID_SEN_VAL, 1, &reading);
     }
 
@@ -117,27 +116,27 @@ void decoder_decode(const char *message) {
 
 // SENSOR LEGEND: SER=0, LIG=1, HUM=2, CO2=3, TEM=4
 // DEBUG LEGEND: FALSE=0, TRUE=1
-void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, const int *value)
+void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor,  uint16_t *value)
 {
     const char answer[50];
     if (pattern == ACK_GID_SEN_VAL)
     {
         switch (sensor)
-        {
+        {           // %d for signed //%u for unsigned
             case 0:
-                sprintf(answer, "ACK,%s,SER,%d", greenhouseId, *value);
+                sprintf(answer, "ACK,%s,SER,%u", greenhouseId, *value);
                 break;
             case 1:
-                sprintf(answer, "ACK,%s,LIG,%d", greenhouseId, *value);
+                sprintf(answer, "ACK,%s,LIG,%u", greenhouseId, *value);
                 break;
             case 2:
-                sprintf(answer, "ACK,%s,HUM,%d", greenhouseId, *value);
+                sprintf(answer, "ACK,%s,HUM,%u", greenhouseId, *value);
                 break;
             case 3:
-                sprintf(answer, "ACK,%s,CO2,%d", greenhouseId, *value);
+                sprintf(answer, "ACK,%s,CO2,%u", greenhouseId, *value);
                 break;
             case 4:
-                sprintf(answer, "ACK,%s,TEM,%d", greenhouseId, *value);
+                sprintf(answer, "ACK,%s,TEM,%u", greenhouseId, *value);
                 break;
         }
     }
@@ -150,19 +149,19 @@ void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sen
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "RES,%s,SER,%d", greenhouseId, *value); 
+                sprintf(answer, "RES,%s,SER,%u", greenhouseId, *value); 
                 break;
             case 1:
-                sprintf(answer, "RES,%s,LIG,%d", greenhouseId, *value); 
+                sprintf(answer, "RES,%s,LIG,%u", greenhouseId, *value); 
                 break;
             case 2:
-                sprintf(answer, "RES,%s,HUM,%d", greenhouseId, *value); 
+                sprintf(answer, "RES,%s,HUM,%u", greenhouseId, *value); 
                 break;
             case 3:
-                sprintf(answer, "RES,%s,CO2,%d", greenhouseId, *value);     
+                sprintf(answer, "RES,%s,CO2,%u", greenhouseId, *value);     
                 break;
             case 4:
-                sprintf(answer, "RES,%s,TEM,%d", greenhouseId, *value);  
+                sprintf(answer, "RES,%s,TEM,%u", greenhouseId, *value);  
                 break;
         }
     }
@@ -171,19 +170,19 @@ void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sen
         switch (sensor)
         {
             case 0:
-                sprintf(answer, "UPD,%s,POST,SER,%d", greenhouseId, *value); 
+                sprintf(answer, "UPD,%s,POST,SER,%u", greenhouseId, *value); 
                 break;
             case 1:
-                sprintf(answer, "UPD,%s,POST,LIG,%d", greenhouseId, *value); 
+                sprintf(answer, "UPD,%s,POST,LIG,%u", greenhouseId, *value); 
                 break;
             case 2:
-                sprintf(answer, "UPD,%s,POST,HUM,%d", greenhouseId, *value); 
+                sprintf(answer, "UPD,%s,POST,HUM,%u", greenhouseId, *value); 
                 break;
             case 3:
-                sprintf(answer, "UPD,%s,POST,CO2,%d", greenhouseId, *value);   
+                sprintf(answer, "UPD,%s,POST,CO2,%u", greenhouseId, *value);   
                 break;
             case 4:
-                sprintf(answer, "UPD,%s,POST,TEM,%d", greenhouseId, *value); 
+                sprintf(answer, "UPD,%s,POST,TEM,%u", greenhouseId, *value); 
                 break;
         }
     }

@@ -1,3 +1,4 @@
+#pragma once
 #include <stdint.h>
 #include "dht11.h"
 
