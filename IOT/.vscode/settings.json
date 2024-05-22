@@ -19,6 +19,7 @@
         "wifisceduler.h": "c",
         "wifi_controller.h": "c",
         "uart.h": "c",
-        "sceduled_sender.h": "c"
+        "sceduled_sender.h": "c",
+        "interrupt.h": "c"
     }
 }
