@@ -8,8 +8,10 @@ void debug_init(){
     pc_comm_init(9600,NULL);    // Telling the messenger how often he'll have to travel
     debug_print("Debug printing initialised \n");
 }
-void debug_print(const char *message){ 
-    uart_send_string_blocking(USART_0, message); // Just the messenger
+void debug_print(const char *message) {
+    char debug_message_with_newline[256]; // Assuming the message is not longer than 255 characters
+    snprintf(debug_message_with_newline, sizeof(debug_message_with_newline), "%s\n", message);
+    uart_send_string_blocking(USART_0, debug_message_with_newline);
 }
 
 void debug_print_w_prefix(const char *message, const char *prefix)
