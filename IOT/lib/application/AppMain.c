@@ -6,6 +6,7 @@
 // yellow because not imported
 
 void AppMain_Setup(){
+    window_open_at_angle(0); // Initialise window on startup to align to default position (since there's no init for it, this serves the same purpose)
     debug_init();
     light_sensor_controller_init();
     dht11_controller_init();
