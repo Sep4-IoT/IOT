@@ -9,4 +9,5 @@ void debug_init();
 void debug_print(const char *message);
 void debug_print_w_prefix(const char *message, const char *prefix);
 void debug_print_w_uint_16(const char *message, const uint16_t *integer);
+void debug_print_w_uint_8(const char *message, const uint8_t *integer);
 void debug_print_w_int(const char *message, const int *integer);

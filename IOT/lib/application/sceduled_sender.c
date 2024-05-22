@@ -3,10 +3,14 @@
 #include "dht11_controller.h"
 #include <avr/interrupt.h>
 
-static uint16_t* dht11_readings[4];
+static uint8_t* dht11_readings[4];
+
+extern sceduled_sender_debugMode;
 
 // Task for sending all readings
 void sceduled_sender_TaskSendAllReadings(){ //is interup rutine (from periodic function)
+    // Debug prinoutout for sceduled task
+    if(sceduled_sender_debugMode){debug_print("Sceduled sender started task");}
 
     sceduled_sender_TaskSendLightReading();
     cli(); // making reading uninteruptable routine
@@ -17,15 +21,19 @@ void sceduled_sender_TaskSendAllReadings(){ //is interup rutine (from periodic f
         // Requires readings to be taken first
         sceduled_sender_TaskSendTemperatureReading();
     
+
+    // Debug prinoutout for sceduled task
+    if(sceduled_sender_debugMode){debug_print("Sceduled sender finished task");}
 }
 void sceduled_sender_TaskGetdht11Readings(){    // NEEDS FIXING, UNSURE WHY ONLY FIRST VALUE GETS SAVED
         
-        uint16_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
+        uint8_t* temp_hum_ptr = dht11_controller_get_temperature_humidity();
         
         for (int i = 0; i < 4; ++i) 
         {
             dht11_readings[i] = temp_hum_ptr[i];
-            debug_print_w_uint_16("readings: ",&dht11_readings[i]);
+            // Debug printout for measurements
+            if(sceduled_sender_debugMode){debug_print_w_uint_8("readings: ", &dht11_readings[i]);}
         }   
 }
 
