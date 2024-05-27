@@ -18,7 +18,7 @@ void dht11_controller_init(){
     }
 }
 
-uint8_t* dht11_controller_get_temperature_humidity()
+inline uint8_t* dht11_controller_get_temperature_humidity()
 {
     const uint8_t humidity_integer, humidity_decimal, temperature_integer, temperature_decimal;
 

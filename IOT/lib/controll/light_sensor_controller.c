@@ -22,7 +22,7 @@ void light_sensor_controller_init(){
     //EndOfDebug
 }
 
-uint16_t light_sensor_controller_makeReading(){
+inline uint16_t light_sensor_controller_makeReading(){
 
     //Debug
     if (light_sensor_controller_debugMode)

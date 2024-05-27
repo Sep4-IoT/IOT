@@ -18,7 +18,7 @@ void window_close(){
     windowAngle = 0;
     if(window_debugMode){debug_print("window close \n");}
 }
-void window_open_at_angle(uint8_t angle){
+inline void window_open_at_angle(uint8_t angle){
     // Sets to an angle of openess, one question asked
     servo_set_angle(angle);
     windowAngle = angle;

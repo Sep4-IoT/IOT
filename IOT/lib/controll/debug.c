@@ -9,7 +9,8 @@ void debug_init(){
     debug_print("Debug printing initialised \n");
 }
 void debug_print(const char *message){ 
-    uart_send_string_blocking(USART_0, message); // Just the messenger
+    char *mutable_message = (char *)message;
+    uart_send_string_blocking(USART_0, mutable_message); // Just the messenger
 }
 
 void debug_print_w_prefix(const char *message, const char *prefix)
