@@ -18,7 +18,7 @@ void AppMain_Setup(){
 
 void AppMain_periodicTasks(){
     //periodic_task_init_a(wifiSceduler_RecconectionTask,5000);
-    periodic_task_init_b(sceduled_sender_TaskSendAllReadings,10000);
+    periodic_task_init_b(sceduled_sender_TaskSendAllReadings,5000);
 }
 
 void AppMain_main(){

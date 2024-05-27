@@ -5,7 +5,9 @@
 #include <avr/interrupt.h>
 
 
-static uint8_t* dht11_readings[4];
+void sceduled_sender_TaskGetdht11Readings();
+
+static uint8_t dht11_readings[4];
 
 extern bool sceduled_sender_debugMode;
 
@@ -20,6 +22,7 @@ void sceduled_sender_TaskSendAllReadings(){ //is interup rutine (from periodic f
     sei(); // making reading uninteruptable routine
         // Requires readings to be taken first
         sceduled_sender_TaskSendHumidityReading(); // Issues when debug is off
+        
         // Requires readings to be taken first
         sceduled_sender_TaskSendTemperatureReading();
     
@@ -48,7 +51,7 @@ void sceduled_sender_TaskSendLightReading(){
 
 // Tries to send only humidity reading
 void sceduled_sender_TaskSendHumidityReading(){
-        decoder_send("", UPD_GID_POST_SEN_VAL, 2, &dht11_readings[0]);
+        decoder_send("", UPD_GID_POST_SEN_VAL, 2, (uint16_t*) &dht11_readings[0]);
 
         if(sceduled_sender_debugMode){debug_print("Task sceduled_sender_TaskSendHumidityReading called \n");}
        
@@ -56,7 +59,7 @@ void sceduled_sender_TaskSendHumidityReading(){
 
 // Tries to send only temperature reading
 void sceduled_sender_TaskSendTemperatureReading(){
-        decoder_send("", UPD_GID_POST_SEN_VAL, 4, &dht11_readings[2]);
+        decoder_send("", UPD_GID_POST_SEN_VAL, 4, (uint16_t*) &dht11_readings[2]);
 
         if(sceduled_sender_debugMode){debug_print("Task sceduled_sender_TaskSendTemperatureReading called \n");}
 }
