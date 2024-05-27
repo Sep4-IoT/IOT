@@ -18,7 +18,7 @@ void wifiSceduler_RecconectionTask(){
     char url[] = "www.google.com";  // The URL you want to resolve
     char ip_address[16];
     WIFI_ERROR_MESSAGE_t result;
-    const char msg[50];
+    char msg[50];
 
         result = wifi_command_get_ip_from_URL(url, ip_address);
 

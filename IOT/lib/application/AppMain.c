@@ -1,7 +1,10 @@
 #include "sceduled_sender.h"
 #include "wifiSceduler.h"
 #include "periodic_task.h"
+#include "light_sensor_controller.h" 
+#include "dht11_controller.h"
 
+void AppMain_periodicTasks();
 
 // yellow because not imported
 

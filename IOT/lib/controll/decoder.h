@@ -18,5 +18,5 @@ enum COMMUNICATION_PATTERN_t {
 #endif // DECODER_H
 
 
-void decoder_decode(const char *message);
+void decoder_decode( char *message);
 void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor, uint16_t *value);
