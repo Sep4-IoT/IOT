@@ -4,7 +4,7 @@
 #include <avr/interrupt.h>
 
 extern bool dht11_debugMode;
-static uint8_t temp_hum[4];
+static uint8_t temp_hum[4]; // Make it persistent
 
 /**
  * @brief Get temperature and humidity readings
@@ -21,7 +21,7 @@ void dht11_controller_init(){
 
 uint8_t* dht11_controller_get_temperature_humidity()
 {
-    const uint8_t humidity_integer, humidity_decimal, temperature_integer, temperature_decimal;
+     uint8_t humidity_integer, humidity_decimal, temperature_integer, temperature_decimal;
 
     //dht11_init();
     cli();

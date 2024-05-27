@@ -1,10 +1,11 @@
 #include "wifi.h"
 #include "wifi_controller.h"
 #include "debug.h"
+#include "decoder.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "decoder.h"
+#include <string.h>
 
 // wifi controloler rename
 //name convention wifiModule_initialiseWifiModule;
@@ -28,7 +29,7 @@ void wifi_controller_initialise_wifi_module(){
 }
 
 // changing credentials/server ip
-void wifi_controller_set_ap_ssid(const char *SSID) {
+void wifi_controller_set_ap_ssid( char *SSID) {
     AP_SSID = SSID;
     if (wifi_controller_debugMode) {
         char debugMessage[50];
@@ -36,7 +37,7 @@ void wifi_controller_set_ap_ssid(const char *SSID) {
         debug_print(debugMessage);
     }
 }
-void wifi_controller_set_ap_pswd(const char *PSWD) {
+void wifi_controller_set_ap_pswd( char *PSWD) {
     AP_PSWD = PSWD;
     if (wifi_controller_debugMode) {
         char debugMessage[50];
@@ -44,7 +45,7 @@ void wifi_controller_set_ap_pswd(const char *PSWD) {
         debug_print(debugMessage);
     }
 }
-void wifi_controller_set_server_ip(const char *IP) {
+void wifi_controller_set_server_ip( char *IP) {
     ServerIP = IP;
     if (wifi_controller_debugMode) {
         char debugMessage[50];
@@ -53,8 +54,8 @@ void wifi_controller_set_server_ip(const char *IP) {
     }
 }
 
-void wifi_controller_set_server_port(const uint16_t *Port) {
-    ServerPort = Port;
+void wifi_controller_set_server_port( uint16_t *Port) {
+    ServerPort = (uint16_t) Port;
     if (wifi_controller_debugMode) {
         char portString[6]; // Assuming 5 characters for the port number plus null terminator
         // Convert uint8_t ServerPort to string
@@ -107,7 +108,7 @@ void wifi_controller_disconnect_from_tcp(){
 }
 
 // sending messages
-void wifi_controller_send_message(const char *message){
+void wifi_controller_send_message( char *message){
      char paddedMessage[50]; // Assuming the maximum length of the message is 50 characters
     
 

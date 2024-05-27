@@ -17,7 +17,7 @@ enum COMMUNICATION_PATTERN_t;
 
 // only care about readability and maintainability
 
-void decoder_decode(const char *message) {
+void decoder_decode( char *message) {
     // TOKEN: this code splits saves request fields into an array
     if (decoder_debugMode)
     {
@@ -64,13 +64,13 @@ void decoder_decode(const char *message) {
 
         window_open_at_angle(angle);
         int state = window_get_state();
-        decoder_send(message, RES_GID_SEN_VAL, 0,  &state);
+        decoder_send(message, RES_GID_SEN_VAL, 0, (uint16_t*) &state);
     }
     // Request for sensor data
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_ser == 0) //In: REQ,gid,GET,SER
     {
         int state = window_get_state();
-        decoder_send(message, RES_GID_SEN_VAL, 0, &state);
+        decoder_send(message, RES_GID_SEN_VAL, 0, (uint16_t*) &state);
     }
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_tem == 0)
     {
@@ -81,7 +81,7 @@ void decoder_decode(const char *message) {
             temp_hum[i] = temp_hum_ptr[i];
         }
         int temperature = temp_hum[2];// * 10 + temp_hum[3]; //Constructing temperature from response array
-        decoder_send(message, RES_GID_SEN_VAL, 4,(const int *) &temperature);
+        decoder_send(message, RES_GID_SEN_VAL, 4,(uint16_t*) &temperature);
     }
     else if (t0_is_req == 0 && t2_is_get == 0 && t3_is_hum == 0)
     {
@@ -118,7 +118,7 @@ void decoder_decode(const char *message) {
 // DEBUG LEGEND: FALSE=0, TRUE=1
 void decoder_send ( char* message, enum COMMUNICATION_PATTERN_t pattern, int sensor,  uint16_t *value)
 {
-    const char answer[50];
+    char answer[50];
     if (pattern == ACK_GID_SEN_VAL)
     {
         switch (sensor)

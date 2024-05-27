@@ -7,7 +7,7 @@
 
 void sceduled_sender_TaskGetdht11Readings();
 
-static uint8_t dht11_readings[4];
+static uint16_t dht11_readings[4]; // static makes it persistent and protected
 
 extern bool sceduled_sender_debugMode;
 
@@ -36,9 +36,9 @@ void sceduled_sender_TaskGetdht11Readings(){
         
         for (int i = 0; i < 4; ++i) 
         {
-            dht11_readings[i] = temp_hum_ptr[i];
+            dht11_readings[i] = (uint16_t) temp_hum_ptr[i];     //rereferencing uint8 array to uint16 values from the first element in array of 4
             // Debug printout for measurements
-            if(sceduled_sender_debugMode){debug_print_w_uint_8("readings: ", &dht11_readings[i]);}
+            if(sceduled_sender_debugMode){debug_print_w_uint_8("readings: ", (uint8_t*) &dht11_readings[i]);}
         }   
 }
 
@@ -51,7 +51,7 @@ void sceduled_sender_TaskSendLightReading(){
 
 // Tries to send only humidity reading
 void sceduled_sender_TaskSendHumidityReading(){
-        decoder_send("", UPD_GID_POST_SEN_VAL, 2, (uint16_t*) &dht11_readings[0]);
+        decoder_send("", UPD_GID_POST_SEN_VAL, 2, (uint16_t*) &dht11_readings[0]); // sending pointers to the elements to be used deeper in the code
 
         if(sceduled_sender_debugMode){debug_print("Task sceduled_sender_TaskSendHumidityReading called \n");}
        
@@ -59,7 +59,7 @@ void sceduled_sender_TaskSendHumidityReading(){
 
 // Tries to send only temperature reading
 void sceduled_sender_TaskSendTemperatureReading(){
-        decoder_send("", UPD_GID_POST_SEN_VAL, 4, (uint16_t*) &dht11_readings[2]);
+        decoder_send("", UPD_GID_POST_SEN_VAL, 4, (uint16_t*) &dht11_readings[2]); // sending pointers to the elements to be used deeper in the code
 
         if(sceduled_sender_debugMode){debug_print("Task sceduled_sender_TaskSendTemperatureReading called \n");}
 }
