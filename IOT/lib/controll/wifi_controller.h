@@ -1,7 +1,7 @@
 /// @brief module is responsible for establishing and keeping connectivity, sending messages
 
 // wifi controloler rename
-
+#pragma once
 #include "wifi.h"
 #include "debug.h"
 
@@ -23,3 +23,6 @@ void wifi_controller_disconnect_from_tcp();
 // sending messages
 void wifi_controller_send_message(const char *message);
 void wifi_controller_callback();
+
+// responsiveness
+WIFI_ERROR_MESSAGE_t wifi_controller_commandAT();

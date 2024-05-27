@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "dht11_controller.h"
 #include "debug.h"
+#include <avr/interrupt.h>
 
 extern bool dht11_debugMode;
 static uint8_t temp_hum[4];
@@ -23,7 +24,9 @@ uint8_t* dht11_controller_get_temperature_humidity()
     const uint8_t humidity_integer, humidity_decimal, temperature_integer, temperature_decimal;
 
     //dht11_init();
+    cli();
     dht11_get(&humidity_integer, &humidity_decimal, &temperature_integer, &temperature_decimal);
+    sei();
 
     temp_hum[0] = humidity_integer;
     temp_hum[1] = humidity_decimal;

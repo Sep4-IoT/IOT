@@ -24,6 +24,12 @@ void debug_print_w_uint_16(const char *message, const uint16_t *integer){
     sprintf(debug_message, "%s: %hu \n", message, *integer);
     debug_print(debug_message);
 }
+void debug_print_w_uint_8(const char *message, const uint8_t *integer){
+    char debug_message[100];
+    sprintf(debug_message, "%s: %hu \n", message, *integer);
+    debug_print(debug_message);
+}
+
 void debug_print_w_int(const char *message, const int *integer){
     char debug_message[100];
     sprintf(debug_message, "%s: %d \n", message, *integer);

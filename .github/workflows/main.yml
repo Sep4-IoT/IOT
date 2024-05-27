@@ -33,6 +33,6 @@ jobs:
       - name: Archive Build Result
         uses: actions/upload-artifact@v3
         with:
-          name: Image_hex
+          name: Image
           path: IOT/.pio/build/megaatmega2560/firmware.hex
 
