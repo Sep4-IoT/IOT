@@ -14,7 +14,7 @@ void AppMain_Setup(){
     light_sensor_controller_init();
     dht11_controller_init();
     wifiSceduler_initialise();
-    testing intorducing syntax error
+
 
     AppMain_periodicTasks();
 }
@@ -34,4 +34,3 @@ void AppMain_main(){
     }
 
 }
-

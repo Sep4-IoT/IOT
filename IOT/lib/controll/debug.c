@@ -35,4 +35,3 @@ void debug_print_w_int( char *message,  int *integer){
     sprintf(debug_message, "%s: %d \n", message, *integer);
     debug_print(debug_message);
 }
-
